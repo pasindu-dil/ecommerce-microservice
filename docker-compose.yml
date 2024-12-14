@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - "5000:5000" # API Gateway exposed on port 3000
+    volumes:
+      - ./api-gateway:/app # Map current directory to /app in the container
+      - /app/node_modules # Prevent overwriting node_modules
+    depends_on:
+      - auth
+      - product
+    environment:
+      SERVICE_AUTH_URL: http://auth:3001
+      SERVICE_PRODUCT_URL: http://product:3003
+    command: npm run dev # Start the Next.js dev server
+
+  frontend: 
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app # Map current directory to /app in the container
+      - /app/node_modules # Prevent overwriting node_modules
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true # Enable polling for file changes
+    command: npm run dev # Start the Next.js dev server
+
+  auth:
+    build:
+      context: ./auth
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./auth:/app # Map current directory to /app in the container
+      - /app/node_modules # Prevent overwriting node_modules
+    environment:
+      MONGO_URI: mongodb://mongodb:27017/auth
+    command: npm run dev # Start the Next.js dev server
+    depends_on:
+      - mongodb
+
+  product:
+    build:
+      context: ./product
+    ports:
+      - "3003:3003"
+    volumes:
+      - ./product:/app # Map current directory to /app in the container
+      - /app/node_modules # Prevent overwriting node_modules
+    environment:
+      MONGO_URI: mongodb://mongodb:27017/products
+    command: npm run dev # Start the Next.js dev server
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:5
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
