@@ -17,18 +17,18 @@ services:
       SERVICE_PRODUCT_URL: http://product:3003
     command: npm run dev # Start the Next.js dev server
 
-  frontend: 
-    build:
-      context: ./frontend
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend:/app # Map current directory to /app in the container
-      - /app/node_modules # Prevent overwriting node_modules
-    environment:
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true # Enable polling for file changes
-    command: npm run dev # Start the Next.js dev server
+  # frontend: 
+  #   build:
+  #     context: ./frontend
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ./frontend:/app # Map current directory to /app in the container
+  #     - /app/node_modules # Prevent overwriting node_modules
+  #   # environment:
+  #     # - NODE_ENV=development
+  #     # - CHOKIDAR_USEPOLLING=true # Enable polling for file changes
+  #   command: npm run dev # Start the Next.js dev server
 
   auth:
     build:
