@@ -30,15 +30,27 @@ services:
 
 
   - name: product
-    url: http://product:3003/api/products
+    url: http://product:3003/api/v1/products
     connect_timeout: 60000
     write_timeout: 60000
     read_timeout: 60000
     routes:
       - name: product
         paths:
-          - /api/products/
+          - /api/v1/products
         strip_path: true
+        plugins:
+          - name: jwt
+            enabled: true
+            config:
+              uri_param_names: ["jwt"]
+              cookie_names: ["auth_token"]
+              claims_to_verify: ["exp"]
+              key_claim_name: "iss"
+              secret_is_base64: false
+              run_on_preflight: true
+
+
   # - name: order-service
   #   url: http://order-service:5002
   #   connect_timeout: 60000

@@ -54,6 +54,7 @@ services:
       - /app/node_modules # Prevent overwriting node_modules
     environment:
       MONGO_URI: mongodb://mongodb:27017/products
+      WATCH_DEBUG: 1
     command: npm run dev # Start the Next.js dev server
     depends_on:
       - mongodb
